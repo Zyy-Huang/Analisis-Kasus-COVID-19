@@ -6,8 +6,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import timedelta
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 from scipy.optimize import curve_fit
 import chardet
+import joblib
 
 # Fungsi untuk mendeteksi encoding file CSV jika tersedia
 def detect_encoding(file_path):
@@ -27,9 +31,7 @@ def main():
     # Judul aplikasi
     st.title("Kelompok-6")
     st.title("Analisis Kasus COVID-19")
-    st.markdown(
-        "Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam."
-    )
+    st.markdown("Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.")
 
     # Cek file yang tersedia dalam direktori saat ini dan dalam folder dataset
     available_files = os.listdir(".")
@@ -66,12 +68,11 @@ def main():
         st.table(pre_covid_data)
 
         # 2. Kasus Pertama Kali Muncul dari Dataset (5 Data Berurutan)
-        st.subheader("Kasus Pertama Kali Muncul ")
+        st.subheader("Kasus Pertama Kali Muncul")
         df_confirmed["date"] = pd.to_datetime(df_confirmed["date"])  # Pastikan kolom tanggal dalam format datetime
         first_case_index = df_confirmed[df_confirmed["cases"] > 0].index.min()  # Temukan indeks kasus pertama yang muncul
 
         if first_case_index is not None:
-            # Ambil 5 data berurutan mulai dari kasus pertama yang muncul
             first_case_dates = df_confirmed.loc[first_case_index:first_case_index + 4]  # Ambil 5 data berurutan
             first_case_dates["date"] = first_case_dates["date"].dt.strftime('%d/%m/%Y')  # Format tanggal
             st.table(first_case_dates[["date", "cases"]])  # Tampilkan tanggal dan jumlah kasus
@@ -95,7 +96,7 @@ def main():
         march_data = df_confirmed[df_confirmed["date"] >= "2020-03-01"]
         st.line_chart(march_data.set_index("date")["cases"])
 
-        # 6. Peningkatan Kas us yang Terjadi dari Awal Maret (dalam bentuk tabel)
+        # 6. Peningkatan Kasus yang Terjadi dari Awal Maret (dalam bentuk tabel)
         st.subheader("Peningkatan Kasus yang Terjadi dari Awal Maret")
         st.table(march_data)
 
@@ -139,13 +140,40 @@ def main():
         st.subheader("Hasil Prediksi COVID-19 untuk 60 Hari")
         st.dataframe(prediction_df)
 
-        # 10. Informasi Pasien
+        # 10. Perbandingan akurasi model 
+        X = df_patient.drop(columns=['current_state', 'confirmed_date', 'released_date', 'deceased_date'])
+        y = df_patient['current_state'].apply(lambda x: 1 if x == 'released' else 0)
+
+        # Tanpa Data Preparation
+        X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X.select_dtypes(include='number'), y, test_size=0.2, random_state=42)
+        model_1 = RandomForestClassifier(random_state=42)
+        model_1.fit(X_train_1, y_train_1)
+        y_pred_1 = model_1.predict(X_test_1)
+        accuracy_1 = accuracy_score(y_test_1, y_pred_1)
+
+        # Dengan Data Preparation
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X.select_dtypes(include='number'))
+        X_train_2, X_test_2, y_train_2, y_test_2 = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+        model_2 = RandomForestClassifier(random_state=42)
+        model_2.fit(X_train_2, y_train_2)
+        y_pred_2 = model_2.predict(X_test_2)
+        accuracy_2 = accuracy_score(y_test_2, y_pred_2)
+
+        # Menampilkan hasil akurasi
+        st.write("### Perbandingan Akurasi Model")
+        st.write(f"**Akurasi Model Tanpa Persiapan Data:** {accuracy_1:.2f}")
+        st.write(f"**Akurasi Model Dengan Persiapan Data:** {accuracy_2:.2f}")
+        # Menyimpan model terbaik
+        best_model = model_2 if accuracy_2 > accuracy_1 else model_1
+        joblib.dump(best_model, 'best_model.pkl')
+
+        # 11. Informasi Pasien
         st.subheader("Informasi Pasien")
-        # Filter data pasien untuk menghilangkan baris dengan nilai hilang
         df_patient_filtered = df_patient.dropna(subset=["gender", "age", "nationality", "province"])
         st.dataframe(df_patient_filtered)
 
-        # 11. Masukkan Data Pasien
+        # 12. Masukkan Data Pasien
         st.subheader("Masukkan Data Pasien")
         age = st.number_input("Umur Pasien", min_value=0, max_value=120, step=1)
         gender_options = df_patient["gender"].unique() if "gender" in df_patient.columns else ["Laki-laki", "Perempuan"]
@@ -172,17 +200,17 @@ def main():
             else:
                 st.warning("Data pasien tidak ditemukan dalam dataset.")
 
-        # 12. Data Pasien Berdasarkan Status
+        # 13. Data Pasien Berdasarkan Status
         st.subheader("Data Pasien Berdasarkan Status")
         patient_status_counts = df_patient["current_state"].value_counts()
         st.bar_chart(patient_status_counts)
 
-        # 13. Rata-Rata Usia Berdasarkan Gender
+        # 14. Rata-Rata Usia Berdasarkan Gender
         st.subheader("Rata-Rata Usia Berdasarkan Gender")
         average_age = df_patient.groupby("gender")["age"].mean()
         st.write(average_age)
 
-        # 14. Grafik Kasus Berdasarkan Gender
+        # 15. Grafik Kasus Berdasarkan Gender
         st.subheader("Grafik Kasus Berdasarkan Gender")
         gender_status_counts = df_patient.groupby(["gender", "current_state"]).size().unstack()
         fig_gender = px.bar(
@@ -193,21 +221,21 @@ def main():
         )
         st.plotly_chart(fig_gender)
 
-        # 15. Grafik Daerah dengan Kasus Terbanyak
+        # 16. Grafik Daerah dengan Kasus Terbanyak
         st.subheader("Grafik Daerah dengan Kasus Terbanyak")
         region_counts = df_patient["province"].value_counts()
         st.bar_chart(region_counts)
 
-        # 16. Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya
+        # 17. Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya
         st.subheader("Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya")
         st.line_chart(df_confirmed.set_index("date")["cases"])
 
-        # 17. Data Kasus COVID-19 berdasarkan Pulau
+        # 18. Data Kasus COVID-19 berdasarkan Pulau
         st.subheader("Data Kasus COVID-19 berdasarkan Pulau")
         island_data = df_province.groupby('island')['confirmed'].sum().reset_index()  # Mengambil data dari province.csv
         st.dataframe(island_data)
 
-        # 18. Grafik Distribusi Kasus COVID-19
+        # 19. Grafik Distribusi Kasus COVID-19
         st.subheader("Grafik Distribusi Kasus COVID-19")
         fig_pie = px.pie(
             data_frame=island_data,
@@ -218,7 +246,7 @@ def main():
         )
         st.plotly_chart(fig_pie)
 
-        # 19. Analisis Data
+        # 20. Analisis Data
         st.subheader("Analisis Data")
         max_cases = island_data.loc[island_data['confirmed'].idxmax()]
         min_cases = island_data.loc[island_data['confirmed'].idxmin()]
