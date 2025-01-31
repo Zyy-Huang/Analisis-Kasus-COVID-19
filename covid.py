@@ -44,6 +44,7 @@ def main():
     st.markdown("")
     
     st.markdown("Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.")
+    
     # Cek file yang tersedia dalam direktori saat ini dan dalam folder dataset
     available_files = os.listdir(".")
     dataset_files = os.listdir("dataset") if os.path.exists("dataset") else []
@@ -74,12 +75,12 @@ def main():
     # Lanjutkan hanya jika semua file ditemukan
     if patient_path and confirmed_path and province_path:
         # 1. Sebelum Penyebaran Kasus COVID
-        st.subheader("Sebelum Penyebaran Kasus COVID")
+        st.subheader(":blue[Sebelum Penyebaran Kasus COVID]")
         pre_covid_data = df_confirmed.head(5)  # Ambil 5 data pertama
         st.table(pre_covid_data)
 
         # 2. Kasus Pertama Kali Muncul dari Dataset (5 Data Berurutan)
-        st.subheader("Kasus Pertama Kali Muncul")
+        st.subheader(":blue[Kasus Pertama Kali Muncul]")
         df_confirmed["date"] = pd.to_datetime(df_confirmed["date"])  # Pastikan kolom tanggal dalam format datetime
         first_case_index = df_confirmed[df_confirmed["cases"] > 0].index.min()  # Temukan indeks kasus pertama yang muncul
 
@@ -92,27 +93,27 @@ def main():
 
         # 3. Tanggal kemungkinan kasus pertama terjadi
         if first_case_index is not None:
-            first_case_date = df_confirmed.loc[first_case_index, "date"].strftime('%d/%m/%Y')
+            first_case_date = df_confirmed.loc[first_case_index, "date"].strftime('% d/%m/%Y')
             st.write(f"Kasus pertama kemungkinan terjadi pada {first_case_date}.")
         else:
             st.warning("Tidak ada kasus yang terdeteksi dalam dataset.")
 
         # 4. Tren Kasus dari Waktu ke Waktu
-        st.subheader("Tren Kasus dari Waktu ke Waktu")
+        st.subheader(":blue[Tren Kasus dari Waktu ke Waktu]")
         fig_trend = px.line(df_confirmed, x="date", y="cases", title="Tren Kasus COVID-19 dari Waktu ke Waktu")
         st.plotly_chart(fig_trend)
 
         # 5. Peningkatan Kasus dari Awal Maret
-        st.subheader("Peningkatan Kasus dari Awal Maret")
+        st.subheader(":blue[Peningkatan Kasus dari Awal Maret]")
         march_data = df_confirmed[df_confirmed["date"] >= "2020-03-01"]
         st.line_chart(march_data.set_index("date")["cases"])
 
         # 6. Peningkatan Kasus yang Terjadi dari Awal Maret (dalam bentuk tabel)
-        st.subheader("Peningkatan Kasus yang Terjadi dari Awal Maret")
+        st.subheader(":blue[Peningkatan Kasus yang Terjadi dari Awal Maret]")
         st.table(march_data)
 
         # 7. Prediksi Kasus untuk 60 Hari ke Depan menggunakan model Gompertz
-        st.subheader("Prediksi Kasus untuk 60 Hari ke Depan")
+        st.subheader(":blue[Prediksi Kasus untuk 60 Hari ke Depan]")
         df_confirmed['days'] = (df_confirmed['date'] - df_confirmed['date'].min()).dt.days
         x = list(df_confirmed['days'])
         y = list(df_confirmed['cases'])
@@ -135,7 +136,7 @@ def main():
         st.plotly_chart(fig_prediction)
 
         # 8. Gambaran Grafik Prediksi vs Data Nyata
-        st.subheader("Gambaran Grafik Prediksi vs Data Nyata")
+        st.subheader(":blue[Gambaran Grafik Prediksi vs Data Nyata]")
         actual_cases = march_data.set_index("date")["cases"].reindex(pd.date_range(start="2020-03-01", periods=len(march_data), freq='D')).fillna(0).values
         days_actual = list(range(len(actual_cases)))
 
@@ -148,15 +149,16 @@ def main():
         st.plotly_chart(fig)
 
         # 9. Hasil Prediksi COVID-19 untuk 60 Hari
-        st.subheader("Hasil Prediksi COVID-19 untuk 60 Hari")
+        st.subheader(":blue[Hasil Prediksi COVID-19 untuk 60 Hari]")
         st.dataframe(prediction_df)
 
         # 10. Perbandingan akurasi model 
+        st.subheader(":blue[Perbandingan akurasi model]")
         X = df_patient.drop(columns=['current_state', 'confirmed_date', 'released_date', 'deceased_date'])
         y = df_patient['current_state'].apply(lambda x: 1 if x == 'released' else 0)
 
         # Tanpa Data Preparation
-        X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X.select_dtypes(include='number'), y, test_size=0.2, random_state=42)
+        X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X.select_dtypes(include='number'), y, test_size=0. 2, random_state=42)
         model_1 = RandomForestClassifier(random_state=42)
         model_1.fit(X_train_1, y_train_1)
         y_pred_1 = model_1.predict(X_test_1)
@@ -172,20 +174,21 @@ def main():
         accuracy_2 = accuracy_score(y_test_2, y_pred_2)
 
         # Menampilkan hasil akurasi
-        st.write("### Perbandingan Akurasi Model")
+        st.write("### :blue[Perbandingan Akurasi Model]")
         st.write(f"**Akurasi Model Tanpa Persiapan Data:** {accuracy_1:.2f}")
         st.write(f"**Akurasi Model Dengan Persiapan Data:** {accuracy_2:.2f}")
+
         # Menyimpan model terbaik
         best_model = model_2 if accuracy_2 > accuracy_1 else model_1
         joblib.dump(best_model, 'best_model.pkl')
 
         # 11. Informasi Pasien
-        st.subheader("Informasi Pasien")
+        st.subheader(":blue[Informasi Pasien]")
         df_patient_filtered = df_patient.dropna(subset=["gender", "age", "nationality", "province"])
         st.dataframe(df_patient_filtered)
 
         # 12. Masukkan Data Pasien
-        st.subheader("Masukkan Data Pasien")
+        st.subheader(":blue[Masukkan Data Pasien]")
         age = st.number_input("Umur Pasien", min_value=0, max_value=120, step=1)
         gender_options = df_patient["gender"].unique() if "gender" in df_patient.columns else ["Laki-laki", "Perempuan"]
         gender = st.selectbox("Jenis Kelamin", gender_options)
@@ -212,17 +215,17 @@ def main():
                 st.warning("Data pasien tidak ditemukan dalam dataset.")
 
         # 13. Data Pasien Berdasarkan Status
-        st.subheader("Data Pasien Berdasarkan Status")
+        st.subheader(":blue[Data Pasien Berdasarkan Status]")
         patient_status_counts = df_patient["current_state"].value_counts()
         st.bar_chart(patient_status_counts)
 
         # 14. Rata-Rata Usia Berdasarkan Gender
-        st.subheader("Rata-Rata Usia Berdasarkan Gender")
-        average_age = df_patient.groupby("gender")["age"].mean()
+        st.subheader(":blue[Rata-Rata Usia Berdasarkan Gender]")
+ average_age = df_patient.groupby("gender")["age"].mean()
         st.write(average_age)
 
         # 15. Grafik Kasus Berdasarkan Gender
-        st.subheader("Grafik Kasus Berdasarkan Gender")
+        st.subheader(":blue[Grafik Kasus Berdasarkan Gender]")
         gender_status_counts = df_patient.groupby(["gender", "current_state"]).size().unstack()
         fig_gender = px.bar(
             gender_status_counts,
@@ -233,21 +236,21 @@ def main():
         st.plotly_chart(fig_gender)
 
         # 16. Grafik Daerah dengan Kasus Terbanyak
-        st.subheader("Grafik Daerah dengan Kasus Terbanyak")
+        st.subheader(":blue[Grafik Daerah dengan Kasus Terbanyak]")
         region_counts = df_patient["province"].value_counts()
         st.bar_chart(region_counts)
 
         # 17. Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya
-        st.subheader("Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya")
+        st.subheader(":blue[Grafik Pasien yang Positif Berdasarkan Tanggal Terkonfirmasinya]")
         st.line_chart(df_confirmed.set_index("date")["cases"])
 
         # 18. Data Kasus COVID-19 berdasarkan Pulau
-        st.subheader("Data Kasus COVID-19 berdasarkan Pulau")
+        st.subheader(":blue[Data Kasus COVID-19 berdasarkan Pulau]")
         island_data = df_province.groupby('island')['confirmed'].sum().reset_index()  # Mengambil data dari province.csv
         st.dataframe(island_data)
 
         # 19. Grafik Distribusi Kasus COVID-19
-        st.subheader("Grafik Distribusi Kasus COVID-19")
+        st.subheader(":blue[Grafik Distribusi Kasus COVID-19]")
         fig_pie = px.pie(
             data_frame=island_data,
             names="island",
@@ -258,7 +261,7 @@ def main():
         st.plotly_chart(fig_pie)
 
         # 20. Analisis Data
-        st.subheader("Analisis Data")
+        st.subheader(":blue[Analisis Data]")
         max_cases = island_data.loc[island_data['confirmed'].idxmax()]
         min_cases = island_data.loc[island_data['confirmed'].idxmin()]
         st.write(f"Pulau dengan jumlah kasus terkonfirmasi tertinggi: {max_cases['island']} ({max_cases['confirmed']})")
