@@ -106,12 +106,12 @@ def main():
         st.plotly_chart(fig_trend)
 
         # 5. Peningkatan Kasus dari Awal Maret
-        st.subheader(":blue[Peningkatan Kasus dari Awal Maret]")
+        st.markdown("Peningkatan Kasus dari Awal Maret")
         march_data = df_confirmed[df_confirmed["date"] >= "2020-03-01"]
         st.line_chart(march_data.set_index("date")["cases"])
 
         # 6. Peningkatan Kasus yang Terjadi dari Awal Maret (dalam bentuk tabel)
-        st.subheader(":blue[Peningkatan Kasus yang Terjadi dari Awal Maret]")
+        st.markdown("Peningkatan Kasus yang Terjadi dari Awal Maret")
         st.table(march_data)
 
         # 7. Prediksi Kasus untuk 60 Hari ke Depan menggunakan model Gompertz
