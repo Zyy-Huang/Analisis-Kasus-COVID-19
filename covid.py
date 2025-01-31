@@ -37,7 +37,7 @@ def main():
     st.title(":syringe: :blue[Analisis Kasus COVID-19]")
     st.title("Kelompok-6:")
     st.markdown("Mohammad Ilham Fauzy")
-    st.markdown("")
+    st.markdown("Nabila Zahra Alia")
     st.markdown("")
     st.markdown("")
     st.markdown("")
