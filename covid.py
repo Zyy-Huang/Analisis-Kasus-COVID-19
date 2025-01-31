@@ -155,7 +155,7 @@ def main():
         st.plotly_chart(fig)
 
         # 10. Perbandingan akurasi model 
-        st.subheader(":blue[Perbandingan Akurasi Model]")
+        st.subheader("Perbandingan Akurasi Model")
         X = df_patient.drop(columns=['current_state', 'confirmed_date', 'released_date', 'deceased_date'])
         y = df_patient['current_state'].apply(lambda x: 1 if x == 'released' else 0)
 
