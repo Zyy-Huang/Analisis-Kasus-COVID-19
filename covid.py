@@ -35,7 +35,7 @@ def gompertz(a, c, t, t_0):
 def main():
     # Judul aplikasi 
     st.title(":syringe: :green[Analisis Kasus COVID-19]")
-    st.title("Kelompok-6:")
+    st.title(":green[Kelompok-6:]")
     st.markdown("Mohammad Ilham Fauzy")
     st.markdown("Nabila Zahra Alia")
     st.markdown("Muhammad Amir Dzakwan")
