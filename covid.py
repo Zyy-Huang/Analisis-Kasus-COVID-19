@@ -225,11 +225,10 @@ def main():
         st.write(average_age)
 
         # 15. Grafik Kasus Berdasarkan Gender
-        st.subheader("Grafik Kasus Berdasarkan Gender")
+        st.markdown("Grafik Kasus Berdasarkan Gender dan Status")
         gender_status_counts = df_patient.groupby(["gender", "current_state"]).size().unstack()
         fig_gender = px.bar(
             gender_status_counts,
-            title="Kasus Berdasarkan Gender dan Status",
             labels={"value": "Jumlah Kasus", "gender": "Gender"},
             barmode="group",
         )
