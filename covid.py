@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from datetime import timedelta
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, mean_squared_error, r2_score
+from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from scipy.optimize import curve_fit
 import chardet
@@ -93,7 +93,7 @@ def main():
 
         # 3. Tanggal kemungkinan kasus pertama terjadi
         if first_case_index is not None:
-            first_case_date = df_confirmed.loc[first_case_index, "date"].strftime('% d/%m/%Y')
+            first_case_date = df_confirmed.loc[first_case_index, "date"].strftime('%d/%m/%Y')
             st.write(f"Kasus pertama kemungkinan terjadi pada {first_case_date}.")
         else:
             st.warning("Tidak ada kasus yang terdeteksi dalam dataset.")
@@ -153,12 +153,12 @@ def main():
         st.dataframe(prediction_df)
 
         # 10. Perbandingan akurasi model 
-        st.subheader(":blue[Perbandingan akurasi model]")
+        st.subheader(":blue[Perbandingan Akurasi Model]")
         X = df_patient.drop(columns=['current_state', 'confirmed_date', 'released_date', 'deceased_date'])
         y = df_patient['current_state'].apply(lambda x: 1 if x == 'released' else 0)
 
         # Tanpa Data Preparation
-        X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X.select_dtypes(include='number'), y, test_size=0. 2, random_state=42)
+        X_train_1, X_test_1, y_train_1, y_test_1 = train_test_split(X.select_dtypes(include='number'), y, test_size=0.2, random_state=42)
         model_1 = RandomForestClassifier(random_state=42)
         model_1.fit(X_train_1, y_train_1)
         y_pred_1 = model_1.predict(X_test_1)
@@ -174,10 +174,8 @@ def main():
         accuracy_2 = accuracy_score(y_test_2, y_pred_2)
 
         # Menampilkan hasil akurasi
-        st.write("### :blue[Perbandingan Akurasi Model]")
         st.write(f"**Akurasi Model Tanpa Persiapan Data:** {accuracy_1:.2f}")
         st.write(f"**Akurasi Model Dengan Persiapan Data:** {accuracy_2:.2f}")
-
         # Menyimpan model terbaik
         best_model = model_2 if accuracy_2 > accuracy_1 else model_1
         joblib.dump(best_model, 'best_model.pkl')
@@ -221,7 +219,7 @@ def main():
 
         # 14. Rata-Rata Usia Berdasarkan Gender
         st.subheader(":blue[Rata-Rata Usia Berdasarkan Gender]")
- average_age = df_patient.groupby("gender")["age"].mean()
+        average_age = df_patient.groupby("gender")["age"].mean()
         st.write(average_age)
 
         # 15. Grafik Kasus Berdasarkan Gender
