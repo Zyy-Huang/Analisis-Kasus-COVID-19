@@ -39,7 +39,7 @@ def main():
     st.markdown("Mohammad Ilham Fauzy")
     st.markdown("Nabila Zahra Alia")
     st.markdown("Muhammad Amir Dzakwan")
-    st.markdown("")
+    st.markdown("Rizal Saleem Ahmad")
     st.markdown("")
     st.markdown("")
     
