@@ -34,7 +34,7 @@ def gompertz(a, c, t, t_0):
 # Fungsi utama untuk aplikasi Streamlit
 def main():
     # Judul aplikasi
-    # :syringe: Analisis Kasus COVID-19
+    st.title(:syringe: Analisis Kasus COVID-19)
     st.title("Kelompok-6")
     st.markdown("Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.")
 
