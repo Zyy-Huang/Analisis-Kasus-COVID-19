@@ -137,7 +137,11 @@ def main():
                                       yaxis_title='Kasus Positif Terkonfirmasi')
         st.plotly_chart(fig_prediction)
 
-        # 8. Gambaran Grafik Prediksi vs Data Nyata
+        # 8. Hasil Prediksi COVID-19 untuk 60 Hari
+        st.markdown("**Hasil Prediksi COVID-19 untuk 60 Hari**")
+        st.dataframe(prediction_df)
+
+        # 9. Gambaran Grafik Prediksi vs Data Nyata
         st.subheader(":blue[Gambaran Grafik Prediksi vs Data Nyata]")
         actual_cases = march_data.set_index("date")["cases"].reindex(pd.date_range(start="2020-03-01", periods=len(march_data), freq='D')).fillna(0).values
         days_actual = list(range(len(actual_cases)))
@@ -149,10 +153,6 @@ def main():
                           xaxis_title='Hari Sejak 1 Maret 2020',
                           yaxis_title='Kasus Positif Terkonfirmasi')
         st.plotly_chart(fig)
-
-        # 9. Hasil Prediksi COVID-19 untuk 60 Hari
-        st.subheader(":blue[Hasil Prediksi COVID-19 untuk 60 Hari]")
-        st.dataframe(prediction_df)
 
         # 10. Perbandingan akurasi model 
         st.subheader(":blue[Perbandingan Akurasi Model]")
