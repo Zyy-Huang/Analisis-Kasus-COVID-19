@@ -76,13 +76,13 @@ def main():
     if patient_path and confirmed_path and province_path:
         # 1. Sebelum Penyebaran Kasus COVID
         st.subheader(":blue[Sebelum Penyebaran Kasus COVID]")
-        st.title("Sebelum Kasus Muncul:")
+        st.write("Sebelum Kasus Muncul:")
         pre_covid_data = df_confirmed.head(5)  # Ambil 5 data pertama
         st.table(pre_covid_data)
 
         # 2. Kasus Pertama Kali Muncul dari Dataset (5 Data Berurutan)
         st.subheader(":blue[Kasus Pertama Kali Muncul]")
-        st.title("Data 5 Kasus Pertama:")
+        st.write("Data 5 Kasus Pertama:")
         df_confirmed["date"] = pd.to_datetime(df_confirmed["date"])  # Pastikan kolom tanggal dalam format datetime
         first_case_index = df_confirmed[df_confirmed["cases"] > 0].index.min()  # Temukan indeks kasus pertama yang muncul
 
