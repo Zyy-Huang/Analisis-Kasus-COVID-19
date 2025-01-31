@@ -259,7 +259,7 @@ def main():
         st.plotly_chart(fig_pie)
 
         # 20. Analisis Data
-        st.subheader(":blue[Analisis Data]")
+        st.markdown("**Analisis Data**")
         max_cases = island_data.loc[island_data['confirmed'].idxmax()]
         min_cases = island_data.loc[island_data['confirmed'].idxmin()]
         st.write(f"Pulau dengan jumlah kasus terkonfirmasi tertinggi: {max_cases['island']} ({max_cases['confirmed']})")
