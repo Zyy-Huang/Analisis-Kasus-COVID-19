@@ -188,7 +188,7 @@ def main():
         st.dataframe(df_patient_filtered)
 
         # 12. Masukkan Data Pasien
-        st.subheader("Masukkan Untuk Mengecek Data Pasien")
+        st.subheader("Masukkan Data Untuk Mengecek Status Pasien")
         age = st.number_input("Umur Pasien", min_value=0, max_value=120, step=1)
         gender_options = df_patient["gender"].unique() if "gender" in df_patient.columns else ["Laki-laki", "Perempuan"]
         gender = st.selectbox("Jenis Kelamin", gender_options)
