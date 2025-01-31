@@ -40,8 +40,8 @@ def main():
     st.markdown("Nabila Zahra Alia")
     st.markdown("Muhammad Amir Dzakwan")
     st.markdown("Rizal Saleem Ahmad")
-    st.markdown("")
-    st.markdown("")
+    st.markdown("Darell Maranatha Rantetasak")
+    st.markdown("Abdul wafi az-zuhairi")
     
     st.markdown("**Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.**")
     
