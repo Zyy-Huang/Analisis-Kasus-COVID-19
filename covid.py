@@ -15,7 +15,7 @@ import joblib
 
 st.set_page_config(
     page_title='Analisis Kasus COVID-19',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+    page_icon=':earth_americas:',
 )
 
 # Fungsi untuk mendeteksi encoding file CSV jika tersedia
@@ -33,11 +33,12 @@ def gompertz(a, c, t, t_0):
 
 # Fungsi utama untuk aplikasi Streamlit
 def main():
-    # Judul aplikasi
-    st.title(:syringe: Analisis Kasus COVID-19)
+    # Judul aplikasi 
+    '''
+    # :syringe: Analisis Kasus COVID-19
     st.title("Kelompok-6")
     st.markdown("Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.")
-
+    '''
     # Cek file yang tersedia dalam direktori saat ini dan dalam folder dataset
     available_files = os.listdir(".")
     dataset_files = os.listdir("dataset") if os.path.exists("dataset") else []
