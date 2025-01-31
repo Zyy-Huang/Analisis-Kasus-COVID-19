@@ -76,13 +76,13 @@ def main():
     if patient_path and confirmed_path and province_path:
         # 1. Sebelum Penyebaran Kasus COVID
         st.subheader(":blue[Sebelum Penyebaran Kasus COVID]")
-        st.markdown("Sebelum Kasus Muncul:")
+        st.markdown("**Sebelum Kasus Muncul:**")
         pre_covid_data = df_confirmed.head(5)  # Ambil 5 data pertama
         st.table(pre_covid_data)
 
         # 2. Kasus Pertama Kali Muncul dari Dataset (5 Data Berurutan)
         st.subheader(":blue[Kasus Pertama Kali Muncul]")
-        st.markdown("Data 5 Kasus Pertama:")
+        st.markdown("**Data 5 Kasus Pertama:**")
         df_confirmed["date"] = pd.to_datetime(df_confirmed["date"])  # Pastikan kolom tanggal dalam format datetime
         first_case_index = df_confirmed[df_confirmed["cases"] > 0].index.min()  # Temukan indeks kasus pertama yang muncul
 
@@ -106,12 +106,12 @@ def main():
         st.plotly_chart(fig_trend)
 
         # 5. Peningkatan Kasus dari Awal Maret
-        st.markdown("Peningkatan Kasus dari Awal Maret")
+        st.markdown("**Peningkatan Kasus dari Awal Maret**")
         march_data = df_confirmed[df_confirmed["date"] >= "2020-03-01"]
         st.line_chart(march_data.set_index("date")["cases"])
 
         # 6. Peningkatan Kasus yang Terjadi dari Awal Maret (dalam bentuk tabel)
-        st.markdown("Peningkatan Kasus yang Terjadi dari Awal Maret")
+        st.markdown("**Peningkatan Kasus yang Terjadi dari Awal Maret**")
         st.table(march_data)
 
         # 7. Prediksi Kasus untuk 60 Hari ke Depan menggunakan model Gompertz
