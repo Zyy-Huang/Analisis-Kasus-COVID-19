@@ -220,12 +220,12 @@ def main():
         st.bar_chart(patient_status_counts)
 
         # 14. Rata-Rata Usia Berdasarkan Gender
-        st.subheader(":blue[Rata-Rata Usia Berdasarkan Gender]")
+        st.markdown("**Rata-Rata Usia Berdasarkan Gender**")
         average_age = df_patient.groupby("gender")["age"].mean()
         st.write(average_age)
 
         # 15. Grafik Kasus Berdasarkan Gender
-        st.markdown("Grafik Kasus Berdasarkan Gender dan Status")
+        st.markdown("**Grafik Kasus Berdasarkan Gender dan Status**")
         gender_status_counts = df_patient.groupby(["gender", "current_state"]).size().unstack()
         fig_gender = px.bar(
             gender_status_counts,
