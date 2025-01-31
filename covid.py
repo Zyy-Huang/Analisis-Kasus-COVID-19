@@ -249,12 +249,11 @@ def main():
         st.dataframe(island_data)
 
         # 19. Grafik Distribusi Kasus COVID-19
-        st.subheader(":blue[Grafik Distribusi Kasus COVID-19]")
+        st.markdown("**Grafik Distribusi Kasus COVID-19 Terkonfirmasi Berdasarkan Pulau**")
         fig_pie = px.pie(
             data_frame=island_data,
             names="island",
             values="confirmed",
-            title="Distribusi Kasus Terkonfirmasi Berdasarkan Pulau",
             color_discrete_sequence=px.colors.sequential.RdBu,
         )
         st.plotly_chart(fig_pie)
