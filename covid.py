@@ -34,11 +34,10 @@ def gompertz(a, c, t, t_0):
 # Fungsi utama untuk aplikasi Streamlit
 def main():
     # Judul aplikasi 
-    '''
-    # :syringe: Analisis Kasus COVID-19
-    Kelompok-6
-    Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.
-    '''
+    st.title(":syringe: Analisis Kasus COVID-19")
+    st.title("Kelompok-6")
+    st.markdown("Aplikasi ini menampilkan data kasus COVID-19 berdasarkan analisis yang mendalam.")
+    
     # Cek file yang tersedia dalam direktori saat ini dan dalam folder dataset
     available_files = os.listdir(".")
     dataset_files = os.listdir("dataset") if os.path.exists("dataset") else []
